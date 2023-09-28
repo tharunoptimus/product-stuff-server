@@ -13,6 +13,31 @@ router.get("/", (_, res) => {
 	res.send({ message: "IMAGE Endpoint Active" })
 })
 
+router.post("/:uuid", authenticateToken, upload.single("image"), async (req, res) => {
+
+    let uuid = req.params.uuid
+
+    if(uuid.trim() == "") {
+        res.status(400).send({ message: "Missing Fields UUID" })
+        return
+    }
+    
+    
+    let image = req.file
+
+    if(!image) {
+        res.status(400).send({ message: "Missing Fields Image" })
+        return
+    }
+
+    let imageURL = await uploadImage(image, uuid).catch((err) => {
+        console.log(err)
+        res.status(400).send({ message: "Error Uploading Image" })
+    })
+
+    return res.status(200).send(imageURL.url)
+
+})
 
 async function uploadImage(image, uuid) {
     const imageKit = new ImageKit({
