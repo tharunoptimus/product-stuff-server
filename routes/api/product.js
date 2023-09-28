@@ -67,6 +67,10 @@ router.patch("/:uuid", authenticateToken, async (req, res) => {
 
     let updateObj = req.body
 
+    if (Object.keys(updateObj).length === 0) {
+        return res.status(400).send({ message: "Missing Body" })
+    }
+
     let product = await Product.findOneAndUpdate({ uuid }, updateObj, { new: true }).catch((err) => {
         console.log(err)
         res.status(304).send({ message: "Something went wrong" })
