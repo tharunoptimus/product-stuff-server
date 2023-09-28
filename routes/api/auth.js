@@ -57,6 +57,44 @@ router.post("/register", async (req, res) => {
 
 })
 
+router.post("/login", async (req, res) => {
+    let { email: emailOrUsernameString, password } = req.body
+
+    emailOrUsernameString = emailOrUsernameString.trim()
+    password = password.trim()
+
+    if (!emailOrUsernameString || !password) {
+        res.status(400).send({ message: "Missing Fields" })
+        return
+    }
+
+    let user = await User.findOne({
+        $or: [{ email: emailOrUsernameString }, { username: emailOrUsernameString }]
+    }).catch((err) => {
+        console.log(err)
+        res.status(500).send({ message: "Server Error" })
+        return
+    })
+
+    if (user == null) {
+        res.status(400).send({ message: "User Not Found" })
+        return
+    }
+
+    let result = await bcrypt.compare(password, user.password)
+
+    if (result == false) {
+        res.status(400).send({ message: "Incorrect Password" })
+        return
+    }
+
+    let token = generateJWTToken(user)
+    user.token = token
+
+
+    res.status(200).send(user)
+
+})
 
 function generateJWTToken({username, email, profilePic, _id, expiry = "7d"}) {
     return jwt.sign(
