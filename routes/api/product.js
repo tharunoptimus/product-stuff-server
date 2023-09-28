@@ -22,7 +22,7 @@ router.get("/some/:skip/:limit", async (req, res) => {
 
     let products = await Product.find().skip(skip).limit(limit).catch((err) => {
         console.log(err)
-        res.sendStatus(400)
+        res.status(500).send({ message: "Server Error" })
     })
 
     res.status(200).send(products)
@@ -31,7 +31,7 @@ router.get("/some/:skip/:limit", async (req, res) => {
 router.get("/all", async (_, res) => {
     let products = await Product.find().catch((err) => {
         console.log(err)
-        res.sendStatus(400)
+        res.status(500).send({ message: "Server Error" })
     })
     res.status(200).send(products)
 })
@@ -45,7 +45,7 @@ router.get("/:uuid", async (req, res) => {
 
     let product = await Product.findOne({ uuid }).catch((err) => {
         console.log(err)
-        res.sendStatus(400)
+        res.status(500).send({ message: "Server Error" })
     })
 
     if (!product) {
@@ -73,12 +73,11 @@ router.patch("/:uuid", authenticateToken, async (req, res) => {
 
     let product = await Product.findOneAndUpdate({ uuid }, updateObj, { new: true }).catch((err) => {
         console.log(err)
-        res.status(304).send({ message: "Something went wrong" })
+        return res.status(500).send({ message: "Server Error" })
     })
 
     if (!product) {
-        res.status(404).send({ message: "Product Not Found" })
-        return
+        return res.status(404).send({ message: "Product Not Found" })
     }
 
     res.sendStatus(204)
@@ -94,7 +93,7 @@ router.delete("/:uuid", authenticateToken, async (req, res) => {
 
     let product = await Product.findOneAndDelete({ uuid }).catch((err) => {
         console.log(err)
-        res.status(304).send({ message: "Something went wrong" })
+        res.status(500).send({ message: "Server Error" })
     })
 
     if (!product) {
