@@ -12,6 +12,21 @@ router.get("/", (_, res) => {
     res.send({ message: "Product Endpoint Active" })
 })
 
+router.get("/some/:skip/:limit", async (req, res) => {
+
+    let skip = parseInt(req.params.skip)
+    let limit = parseInt(req.params.limit)
+
+    skip = isNaN(skip) ? 0 : skip
+    limit = isNaN(limit) ? 10 : limit
+
+    let products = await Product.find().skip(skip).limit(limit).catch((err) => {
+        console.log(err)
+        res.sendStatus(400)
+    })
+
+    res.status(200).send(products)
+})
 
 router.get("/all", async (_, res) => {
     let products = await Product.find().catch((err) => {
