@@ -65,5 +65,26 @@ router.patch("/:uuid", authenticateToken, async (req, res) => {
     res.sendStatus(204)
 })
 
+router.delete("/:uuid", authenticateToken, async (req, res) => {
+    let uuid = req.params.uuid
+
+    if (!uuid) {
+        res.status(400).send({ message: "Missing Fields UUID" })
+        return
+    }
+
+    let product = await Product.findOneAndDelete({ uuid }).catch((err) => {
+        console.log(err)
+        res.status(304).send({ message: "Something went wrong" })
+    })
+
+    if (!product) {
+        res.status(404).send({ message: "Product Not Found" })
+        return
+    }
+
+    res.sendStatus(204)
+
+})
 
 module.exports = router
