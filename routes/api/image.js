@@ -14,4 +14,22 @@ router.get("/", (_, res) => {
 })
 
 
+async function uploadImage(image, uuid) {
+    const imageKit = new ImageKit({
+        publicKey : process.env.IMAGE_KIT_PUBLIC_KEY,
+        privateKey : process.env.IMAGE_KIT_PRIVATE_KEY,
+        urlEndpoint : process.env.IMAGE_KIT_URL_ENDPOINT
+    })
+
+    const response = await imageKit.upload({
+        file : image.buffer,
+        fileName : `${image.originalname}-${uuid}}`
+    }).catch(err => {
+        console.log(err)
+        return null
+    })
+
+    return response
+}
+
 module.exports = router
