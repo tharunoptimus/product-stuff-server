@@ -13,4 +13,14 @@ router.get("/", (_, res) => {
 })
 
 
+router.get("/all", async (_, res) => {
+    let products = await Product.find().catch((err) => {
+        console.log(err)
+        res.sendStatus(400)
+    })
+    res.status(200).send(products)
+})
+
+
+
 module.exports = router
