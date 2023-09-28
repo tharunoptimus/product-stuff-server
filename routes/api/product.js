@@ -21,6 +21,26 @@ router.get("/all", async (_, res) => {
     res.status(200).send(products)
 })
 
+router.get("/:uuid", async (req, res) => {
+    let uuid = req.params.uuid
+    if (!uuid) {
+        res.status(400).send({ message: "Missing Fields UUID" })
+        return
+    }
+
+    let product = await Product.findOne({ uuid }).catch((err) => {
+        console.log(err)
+        res.sendStatus(400)
+    })
+
+    if (!product) {
+        res.status(404).send({ message: "Product Not Found" })
+        return
+    }
+
+    res.status(200).send(product)
+
+})
 
 
 module.exports = router
