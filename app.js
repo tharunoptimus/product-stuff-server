@@ -15,6 +15,15 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 
+// API Routes
+let authAPI = require("./routes/api/auth")
+let imageAPI = require("./routes/api/image")
+let productAPI = require("./routes/api/product")
+
+app.use("/api/auth/", authAPI)
+app.use("/api/image/", imageAPI)
+app.use("/api/product/", productAPI)
+
 app.get("/", (_, res) => {
 	res.status(200).send({ text: "API ENDPOINT ACTIVE" })
 })
