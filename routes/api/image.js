@@ -5,6 +5,7 @@ const { authenticateToken } = require("../../middleware")
 const multer  = require('multer')
 const upload = multer({ storage: multer.memoryStorage()})
 const ImageKit = require("imagekit")
+const Product = require("../../schemas/ProductSchema")
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
@@ -22,7 +23,6 @@ router.post("/:uuid", authenticateToken, upload.single("image"), async (req, res
         return
     }
     
-    
     let image = req.file
 
     if(!image) {
@@ -35,7 +35,22 @@ router.post("/:uuid", authenticateToken, upload.single("image"), async (req, res
         res.status(400).send({ message: "Error Uploading Image" })
     })
 
-    return res.status(200).send(imageURL.url)
+    if(!imageURL) {
+        res.status(400).send({ message: "Error Uploading Image" })
+        return
+    }
+
+    let product = await Product.updateOne({ uuid }, { imgSrc: imageURL.url }, { new: true }).catch((err) => {
+        console.log(err)
+        res.status(500).send({ message: "Server Error" })
+    })
+
+    if(!product) {
+        res.status(404).send({ message: "Product Not Found", imgSrc: imageURL.url })
+        return
+    }
+
+    return res.status(200).send({imgSrc: imageURL.url})
 
 })
 
