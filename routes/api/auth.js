@@ -184,4 +184,13 @@ function generateJWTToken({username, email, profilePic, _id, expiry = "7d"}) {
     )
 }
 
+function verifyAndExtractToken(token) {
+    try {
+        let decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+        return decoded
+    } catch (err) {
+        return null
+    }
+}
+
 module.exports = router
