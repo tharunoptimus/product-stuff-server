@@ -126,6 +126,32 @@ npm start
         - 400: Missing Fields (missing token field in request body)
         - 500: Server Error (MongoDB Error)
 
+- `POST /api/auth/verify`
+    - Verifies the JWT token and sends the user
+    - Request Body:
+        - token: String (JWT)
+    - `200 OK` Returns a JSON object with the user
+
+        {
+
+        - `_id`: String
+        - `firstName`: String
+        - `lastName`: String
+        - `email`: String
+        - `password`: String (Hashed)
+        - `username`: String (firstName.lastName)
+        - `profilePic`: String
+        - `token`: String (JWT)
+
+        }
+
+    - Possible Errors:
+        - 400: Missing Fields (missing token field in request body)
+        - 401: Invalid Token (Invalid JWT)
+        - 401: User Not Found (User with the given JWT extracted from the request body does not exist)
+        - 500: Server Error (MongoDB Error)
+
+
 
 ### Product Endpoints (/api/product)
 
