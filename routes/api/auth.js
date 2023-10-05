@@ -3,6 +3,8 @@ const app = express()
 const bcrypt = require("bcryptjs")
 const router = express.Router()
 const jwt = require("jsonwebtoken")
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args))
+const FIRE_API_ENDPOINT = "https://fire.adaptable.app/api/tokens/verify"
 
 const User = require("../../schemas/UserSchema")
 
