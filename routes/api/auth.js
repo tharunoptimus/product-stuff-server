@@ -171,6 +171,37 @@ app.post("/fireoauth", async (req, res) => {
 
 })
 
+app.post("/verify", async (req, res) => {
+    let { token } = req.body
+
+    if (!token) {
+        res.status(400).send({ message: "Missing Fields" })
+        return
+    }
+
+    let decoded = verifyAndExtractToken(token)
+
+    if (decoded == null) {
+        res.status(401).send({ message: "Invalid Token" })
+        return
+    }
+
+    let user = await User.findOne({ _id: decoded._id }).catch((err) => {
+        res.status(500).send({ message: "Server Error" })
+        return
+    })
+
+    if (user == null) {
+        res.status(401).send({ message: "User Not Found" })
+        return
+    }
+
+    let newToken = generateJWTToken(user)
+    user.token = newToken
+
+    res.status(200).send(user)
+})
+
 function generateJWTToken({username, email, profilePic, _id, expiry = "7d"}) {
     return jwt.sign(
         {
