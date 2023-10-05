@@ -14,6 +14,7 @@ Uses MongoDB as the database and ImageKit as the Image CDN
 - [DotEnv](https://www.npmjs.com/package/dotenv) - NodeJS library for loading environment variables from a .env file
 - [Cors](https://www.npmjs.com/package/cors) - NodeJS library for providing a Connect/Express middleware that can be used to enable CORS with various options
 - [ImageKit](https://www.npmjs.com/package/imagekit) - NodeJS SDK for ImageKit.io (Image CDN)
+- [Node-Fetch](https://www.npmjs.com/package/node-fetch) - NodeJS library for fetching data from an API
 
 
 ## Installation
@@ -100,6 +101,29 @@ npm start
         - 400: Missing Fields (missing fields in request body)
         - 400: User Not Found (User with the given email or username does not exist)
         - 401: Incorrect Password (Invalid Credentials)
+        - 500: Server Error (MongoDB Error)
+
+- `POST /api/auth/fireoauth`
+    - Logs in a user using Fire OAuth
+    - Request Body:
+        - token: String (Firebase ID Token)
+    - `200 OK` Returns a JSON object with the user
+
+        {
+
+        - `_id`: String
+        - `firstName`: String
+        - `lastName`: String
+        - `email`: String
+        - `password`: String (Hashed)
+        - `username`: String (firstName.lastName)
+        - `profilePic`: String
+        - `token`: String (JWT)
+
+        }
+
+    - Possible Errors:
+        - 400: Missing Fields (missing token field in request body)
         - 500: Server Error (MongoDB Error)
 
 
