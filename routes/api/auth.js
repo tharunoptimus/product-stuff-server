@@ -35,27 +35,47 @@ router.post("/register", async (req, res) => {
 
         let hashedPassword = await bcrypt.hash(password, 10)
 
-        let newUser = await User.create({
-            firstName,
-            lastName,
-            email,
-            profilePic: `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${firstName}.${lastName}?radius=50?backgroundColor=#4cf0c3?mood[]=happy`,
-            username: `${firstName}.${lastName}`,
-            password: hashedPassword
-        }).catch((err) => {
-            console.log(err)
-            res.status(500).send({ message: "Server Error" })
-            return
+        let newUser = await registerNewUser({ 
+            firstName, 
+            lastName, 
+            email, 
+            profilePic: `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${firstName}.${lastName}?radius=50?backgroundColor=#4cf0c3?mood[]=happy`, 
+            username: `${firstName}.${lastName}`, 
+            password: hashedPassword 
         })
 
-        let token = generateJWTToken(newUser)
-        newUser.token = token
-       
+        if (newUser == null) {
+            res.status(500).send({ message: "Server Error" })
+            return
+        }
+
         return res.status(201).send(newUser)
 
     }
 
 })
+
+async function registerNewUser({ firstName, lastName, email, profilePic, username, hashedPassword }) {
+
+    let newUser = await User.create({
+        firstName,
+        lastName,
+        email,
+        profilePic,
+        username,
+        password: hashedPassword
+    }).catch((err) => {
+        console.log(err)
+        res.status(500).send({ message: "Server Error" })
+        return null
+    })
+
+    let token = generateJWTToken(newUser)
+    newUser.token = token
+
+    return newUser
+
+}
 
 router.post("/login", async (req, res) => {
     let { email: emailOrUsernameString, password } = req.body
