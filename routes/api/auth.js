@@ -118,6 +118,59 @@ router.post("/login", async (req, res) => {
 
 })
 
+app.post("/fireoauth", async (req, res) => {
+
+    let { token: fireOAuthToken } = req.body
+    
+    if (!fireOAuthToken) {
+        res.status(400).send({ message: "Missing Fields" })
+        return
+    }
+
+    let response = await fetch(FIRE_API_ENDPOINT, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ token: fireOAuthToken })
+    })
+
+    let data = await response.json()
+
+    let { email, firstName, lastName, profilePic } = data
+
+    let user = await User.findOne({ email }).catch((err) => {
+        res.status(500).send({ message: "Server Error" })
+        return
+    })
+
+    if (user == null) {
+
+        let newUser = await registerNewUser({ 
+            firstName, 
+            lastName, 
+            email, 
+            profilePic, 
+            username: `${firstName}.${lastName}`, 
+            password: "fireoauth" 
+        })
+
+        if (newUser == null) {
+            res.status(500).send({ message: "Server Error" })
+            return
+        }
+
+        return res.status(201).send(newUser)
+
+    }
+
+    let token = generateJWTToken(user)
+    user.token = token
+
+    res.status(200).send(user)
+
+})
+
 function generateJWTToken({username, email, profilePic, _id, expiry = "7d"}) {
     return jwt.sign(
         {
