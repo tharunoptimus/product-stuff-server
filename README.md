@@ -75,6 +75,7 @@ npm start
 
     - Possible Errors:
         - 400: Missing Fields (missing fields in request body)
+        - 400: Email Already Exists (User with the given email already exists)
         - 500: Server Error (MongoDB Error)
 
 - `POST /api/auth/login`

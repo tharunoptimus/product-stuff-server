@@ -89,7 +89,6 @@ async function registerNewUser({ firstName, lastName, email, profilePic, usernam
         password: hashedPassword
     }).catch((err) => {
         console.log(err)
-        res.status(500).send({ message: "Server Error" })
         return null
     })
 
@@ -134,8 +133,7 @@ router.post("/login", async (req, res) => {
     let token = generateJWTToken(user)
     user.token = token
 
-
-    res.status(200).send(user)
+    return res.status(200).send(user)
 
 })
 
