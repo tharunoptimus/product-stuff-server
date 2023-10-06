@@ -41,7 +41,7 @@ router.post("/register", async (req, res) => {
             firstName, 
             lastName, 
             email, 
-            profilePic: `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${firstName}.${lastName}?radius=50?backgroundColor=#4cf0c3?mood[]=happy`, 
+            profilePic: `https://api.dicebear.com/7.x/fun-emoji/svg?radius=50&backgroundColor=4cf0c3&mood=[happy]&seed=${firstName}.${lastName}`, 
             username: `${firstName}.${lastName}`, 
             password: hashedPassword 
         })
