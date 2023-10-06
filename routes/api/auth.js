@@ -27,8 +27,10 @@ router.post("/register", async (req, res) => {
         res.status(400).send({ message: "Missing Fields" })
         return
     }
-    
-    let user = await User.findOne({ email }).catch((err) => {
+
+    let userNameToCheck = `${firstName}.${lastName}`
+
+    let user = await User.findOne({ $or: [{ email }, { username: userNameToCheck }] }).catch((err) => {
         res.status(500).send({ message: "Server Error" })
         return
     })
@@ -54,7 +56,26 @@ router.post("/register", async (req, res) => {
         return res.status(201).send(newUser)
 
     }
+    
+    let errorText = ""
+    let alreadyExists = " already exists"
 
+    switch (true) {
+        case user.email == email && user.username == userNameToCheck:
+            errorText = "Email and Username" + alreadyExists
+            break
+        case user.email == email:
+            errorText = "Email" + alreadyExists
+            break
+        case user.username == userNameToCheck:
+            errorText = "Username" + alreadyExists
+            break
+        default:
+            errorText = "Something Went Wrong"
+            break
+    }
+
+    return res.status(400).send({ message: errorText })
 })
 
 async function registerNewUser({ firstName, lastName, email, profilePic, username, hashedPassword }) {
