@@ -118,7 +118,7 @@ router.post("/login", async (req, res) => {
 
 })
 
-app.post("/fireoauth", async (req, res) => {
+router.post("/fireoauth", async (req, res) => {
 
     let { token: fireOAuthToken } = req.body
     
@@ -171,7 +171,7 @@ app.post("/fireoauth", async (req, res) => {
 
 })
 
-app.post("/verify", async (req, res) => {
+router.post("/verify", async (req, res) => {
     let { token } = req.body
 
     if (!token) {
