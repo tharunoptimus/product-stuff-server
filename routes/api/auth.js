@@ -202,12 +202,9 @@ app.post("/verify", async (req, res) => {
     res.status(200).send(user)
 })
 
-function generateJWTToken({username, email, profilePic, _id, expiry = "7d"}) {
+function generateJWTToken({_id, expiry = "7d"}) {
     return jwt.sign(
         {
-            username,
-            email,
-            profilePic,
             _id
         },
         process.env.ACCESS_TOKEN_SECRET,
