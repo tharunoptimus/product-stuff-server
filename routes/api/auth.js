@@ -151,7 +151,7 @@ router.post("/fireoauth", async (req, res) => {
             lastName, 
             email, 
             profilePic, 
-            username: `${firstName}.${lastName}`, 
+            username: `${firstName}.${lastName}.fire`, 
             password: "fireoauth" 
         })
 
