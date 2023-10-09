@@ -171,7 +171,7 @@ router.post("/fireoauth", async (req, res) => {
             email, 
             profilePic, 
             username: `${firstName}.${lastName}.fire`, 
-            password: "fireoauth" 
+            hashedPassword: "fireoauth" 
         })
 
         if (newUser == null) {
