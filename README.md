@@ -229,6 +229,34 @@ npm start
         - 500: Server Error (MongoDB Error)
         - 404: Product Not Found (Product with the given UUID does not exist)
 
+
+- `POST /api/product`
+    - Should be authenticated with a valid JWT in the Authorization Header
+    - Add a product to the database
+    - Request Body:
+        - quantity: String (Pieces or Grams)
+        - price: Number
+        - productName: String
+        - productDescription: String
+    - `201 Created` Returns a JSON object with the newly created product
+
+        {
+
+        - `_id`: String
+        - `imgSrc`: String (ImageKit URL)
+        - `quantity`: String (Pieces or Grams)
+        - `price`: Number
+        - `productName`: String
+        - `productDescription`: String
+        - `uuid`: String (Unique ID)
+        - `addedBy`: String (User ID)
+
+        }
+
+    - Possible Errors:
+        - 400: Missing Fields (missing fields in request body)
+        - 500: Server Error (MongoDB Error)
+
 - `PATCH /api/product/:uuid`
     - Should be authenticated with a valid JWT in the Authorization Header
     - Update a product from the database with the given uuid and request body with fields [`imgSrc`, `quantity`, `price`, `productName`, `productDescription`]
