@@ -37,7 +37,7 @@ router.get("/all", async (_, res) => {
     res.status(200).send(products)
 })
 
-router.get("/:uuid", async (req, res) => {
+router.get("/uuid/:uuid", async (req, res) => {
     let uuid = req.params.uuid
     if (!uuid) {
         res.status(400).send({ message: "Missing Fields UUID" })
@@ -109,7 +109,7 @@ router.patch("/:uuid", authenticateToken, async (req, res) => {
     res.sendStatus(204)
 })
 
-router.delete("/uuid/:uuid", authenticateToken, async (req, res) => {
+router.delete("/:uuid", authenticateToken, async (req, res) => {
     let uuid = req.params.uuid
 
     if (!uuid) {
