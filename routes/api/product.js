@@ -109,7 +109,7 @@ router.patch("/:uuid", authenticateToken, async (req, res) => {
     res.sendStatus(204)
 })
 
-router.delete("/:uuid", authenticateToken, async (req, res) => {
+router.delete("/uuid/:uuid", authenticateToken, async (req, res) => {
     let uuid = req.params.uuid
 
     if (!uuid) {
