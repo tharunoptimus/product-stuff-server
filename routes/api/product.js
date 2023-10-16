@@ -1,6 +1,7 @@
 const express = require("express")
 const app = express()
 const router = express.Router()
+const { v4: uuidv4 } = require('uuid');
 const { authenticateToken } = require("../../middleware")
 
 const Product = require("../../schemas/ProductSchema")
@@ -55,6 +56,31 @@ router.get("/:uuid", async (req, res) => {
 
     res.status(200).send(product)
 
+})
+
+router.post("/", authenticateToken, async (req, res) => {
+    let { productName, productDescription, price, quantity } = req.body
+
+    if (!productName || !productDescription || !price || !quantity) {
+        res.status(400).send({ message: "Missing Fields" })
+        return
+    }
+
+    let uuid = uuidv4()
+
+    let product = await Product.create({
+        productName,
+        productDescription,
+        price,
+        quantity,
+        uuid,
+        addedBy: req.user._id
+    }).catch((err) => {
+        console.log(err)
+        return res.status(500).send({ message: "Server Error" })
+    })
+
+    res.status(201).send(product)
 })
 
 router.patch("/:uuid", authenticateToken, async (req, res) => {
